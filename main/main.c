@@ -13,7 +13,7 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "driver/gpio.h"
-#include "hal_i2c.h"
+#include "hx711.h"
 
 /**
  * Brief:
@@ -53,16 +53,18 @@ void app_main()
     gpio_config(&io_conf);
     //hal_i2c_init(0,5,17);
     uint8_t data=0;
-    esp_err_t err;
-    int cnt = 0;
+    hx711_init();
+    int cnt=1;
     while(1) {
-        printf("cnt: %d\n", cnt++);
         vTaskDelay(1000 / portTICK_RATE_MS);
         // err=hal_i2c_master_mem_write(0,0x1a,0x02,&data,1);
         // if(err!=ESP_OK)
         //     printf("write faliled:%d\n",err);
         gpio_set_level(GPIO_OUTPUT_IO_0, cnt % 2);
         gpio_set_level(GPIO_OUTPUT_IO_1, cnt % 2);
+        uint32_t a=hx711_read();
+        printf("weigher:%d\n",a);
+
     }
 }
 
