@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := we_esp32
+PROJECT_NAME := weigher
 
 include $(IDF_PATH)/make/project.mk
 

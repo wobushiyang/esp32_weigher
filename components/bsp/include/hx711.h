@@ -5,5 +5,5 @@
 
 
 void hx711_init();
-uint32_t hx711_read();
+float hx711_read();
 #endif

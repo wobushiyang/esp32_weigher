@@ -62,8 +62,9 @@ void app_main()
         //     printf("write faliled:%d\n",err);
         gpio_set_level(GPIO_OUTPUT_IO_0, cnt % 2);
         gpio_set_level(GPIO_OUTPUT_IO_1, cnt % 2);
-        uint32_t a=hx711_read();
-        printf("weigher:%d\n",a);
+        float a=hx711_read();
+        printf("weigher:%f\n",a);
+        cnt++;
 
     }
 }
