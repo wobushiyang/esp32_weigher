@@ -28,6 +28,7 @@ static esp_err_t event_handler(void *ctx, system_event_t * event)
         //esp_wifi_connect();
         break;
     case SYSTEM_EVENT_STA_GOT_IP:
+        xSemaphoreGive(wifi_done);
         printf("ip: " IPSTR "\n", IP2STR(&event->event_info.got_ip.ip_info.ip));
         printf("netmask: " IPSTR "\n", IP2STR(&event->event_info.got_ip.ip_info.netmask));
         printf("gw: " IPSTR "\n", IP2STR(&event->event_info.got_ip.ip_info.gw));
@@ -132,15 +133,9 @@ void app_main()
     hx711_init();
     hal_gpio_init(GPIO_OUTPUT_PIN_SEL);
     hal_wifi_init();
-    
-    err=esp_wifi_connect();
-    if(err!=ESP_OK)
-    {
-        xTaskCreate(&smart_config_task, "smart_config_task", 2048, NULL, 5, &smart_config_handle);
-        //vTaskDelete(1000/portTICK_RATE_MS);
-        xSemaphoreTake(wifi_done,(portTickType)portMAX_DELAY);
-        vTaskDelete(smart_config_handle);
-    }
+    xTaskCreate(&smart_config_task, "smart_config_task", 2048, NULL, 5, &smart_config_handle);
+    xSemaphoreTake(wifi_done,(portTickType)portMAX_DELAY);
+    vTaskDelete(smart_config_handle);
     gpio_set_level(GPIO_OUTPUT_IO_1,1);
       
     xTaskCreate(&weigher_task, "weigher_task", 2048, NULL, 5, NULL);
